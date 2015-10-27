@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 from __future__ import print_function
 import sys
@@ -8,6 +9,18 @@ try:
 except ImportError:
     print("Cannot import Docker API, is docker_py installed?", file=sys.stderr)
     sys.exit(1)
+
+# Pseudographics
+# ZERO, ONE, TWO, THREE = \
+#     '   ',\
+#     '|  ',\
+#     '+- ',\
+#     '+- '
+ZERO, ONE, TWO, THREE = \
+    '   ',\
+    '│  ',\
+    '└╴ ',\
+    '├╴ '
 
 
 def name(image):
@@ -29,12 +42,12 @@ def tree(root_id=''):
 def display(tree, marks):
     for i, (img, chldrn) in enumerate(tree):
         for x in marks:
-            print('|  ' if x else '   ', end='')
+            print(ONE if x else ZERO, end='')
         if i < len(tree) - 1:
-            print('+- ' + img)
+            print(THREE + img)
             display(chldrn, marks + [1])
         else:
-            print('+- ' + img)
+            print(TWO + img)
             display(chldrn, marks + [0])
 
 
