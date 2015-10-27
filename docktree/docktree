@@ -6,27 +6,39 @@ import sys
 try:
     from docker import Client
 except ImportError:
-    print("Cannot import Docker API, is package docker_py installed?", file=sys.stderr)
+    print("Cannot import Docker API, is docker_py installed?", file=sys.stderr)
     sys.exit(1)
 
-def s(str):
-    return str[0:12]
 
-cli = Client(base_url='unix://var/run/docker.sock', version='auto')
-images = cli.images(all=True)
-
-imd = dict((i['Id'], i) for i in images)
-
-def recurse(id, level=0):
-    i = imd[id]
-    tag = i['RepoTags'][0]
+def name(image):
+    id, tag = image['Id'][0:12], image['RepoTags'][0]
     if tag == '<none>:<none>':
-        tag = ''
-    print((level * '  '), '+--', s(id), tag)
-    for j in images:
-        if j['ParentId'] == id:
-            recurse(j['Id'], level + 1)
+        return id
+    return id + ' ' + tag
 
-for i in images:
-    if not i['ParentId']:
-        recurse(i['Id'])
+
+def children(image_id):
+    return [i for i in images if i['ParentId'] == image_id]
+
+
+def tree(root_id=''):
+    return [(name(img), tree(img['Id']))
+            for img in children(root_id)]
+
+
+def display(tree, marks):
+    for i, (img, chldrn) in enumerate(tree):
+        for x in marks:
+            print('|  ' if x else '   ', end='')
+        if i < len(tree) - 1:
+            print('+- ' + img)
+            display(chldrn, marks + [1])
+        else:
+            print('+- ' + img)
+            display(chldrn, marks + [0])
+
+
+if __name__ == '__main__':
+    cli = Client(base_url='unix://var/run/docker.sock', version='auto')
+    images = cli.images(all=True)
+    display(tree(''), [])
