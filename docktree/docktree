@@ -3,6 +3,7 @@
 
 from __future__ import print_function
 import sys
+import locale
 
 try:
     from docker import Client
@@ -11,16 +12,17 @@ except ImportError:
     sys.exit(1)
 
 # Pseudographics
-# ZERO, ONE, TWO, THREE = \
-#     '   ',\
-#     '|  ',\
-#     '+- ',\
-#     '+- '
-ZERO, ONE, TWO, THREE = \
-    '   ',\
-    '│  ',\
-    '└╴ ',\
+ZERO, ONE, TWO, THREE = (
+    '   ',
+    '|  ',
+    '+- ',
+    '+- '
+) if locale.getlocale()[1] != 'UTF-8' else (
+    '   ',
+    '│  ',
+    '└╴ ',
     '├╴ '
+)
 
 
 def name(image):
