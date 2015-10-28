@@ -1,6 +1,8 @@
-# docktree
+# Docktree
 
 Displays the tree structure of your Docker images.
+
+Meant as a replacement for the removed functionality of `docker images -t`.
 
 Usage example:
 
