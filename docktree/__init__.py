@@ -11,8 +11,6 @@ except ImportError:
     print("Cannot import Docker API, is docker_py installed?", file=sys.stderr)
     sys.exit(1)
 
-print(locale.getdefaultlocale())
-
 # Pseudographics
 ZERO, ONE, TWO, THREE = (
     u'   ',
