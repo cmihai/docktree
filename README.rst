@@ -1,10 +1,13 @@
-# Docktree
+========
+Docktree
+========
 
 Displays the tree structure of your Docker images.
 
 Meant as a replacement for the removed functionality of `docker images -t`.
 
 Usage example:
+::
 
     (env)pi@raspberrypi [docktree/docktree] % ./docktree
     └╴ 71a76a74c237
@@ -15,3 +18,4 @@ Usage example:
              │  └╴ 7e548b8390f2 test3:latest
              └╴ c89a6bc5d884
                 └╴ baee49e775b3 resin/rpi-raspbian:jessie
+
