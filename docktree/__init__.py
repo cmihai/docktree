@@ -24,6 +24,8 @@ ZERO, ONE, TWO, THREE = (
     '├╴ '
 )
 
+images = []
+
 
 def name(image):
     id, tag = image['Id'][0:12], image['RepoTags'][0]
@@ -53,7 +55,12 @@ def display(tree, marks):
             display(chldrn, marks + [0])
 
 
-if __name__ == '__main__':
+def main():
+    global images
     cli = Client(base_url='unix://var/run/docker.sock', version='auto')
     images = cli.images(all=True)
     display(tree(''), [])
+
+
+if __name__ == '__main__':
+    main()
