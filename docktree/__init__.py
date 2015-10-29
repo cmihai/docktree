@@ -20,8 +20,8 @@ ZERO, ONE, TWO, THREE = (
 ) if locale.getdefaultlocale()[1] != 'UTF-8' else (
     u'   ',
     u'│  ',
-    u'└╴ ',
-    u'├╴ '
+    u'└─ ',
+    u'├─ '
 )
 
 images = []
