@@ -4,6 +4,7 @@
 from __future__ import print_function
 import sys
 import locale
+import argparse
 
 try:
     from docker import Client
@@ -66,6 +67,11 @@ class Docktree(object):
 
 
 def main():
+    parser = argparse.ArgumentParser(
+        prog='docktree',
+        description='Display the local Docker images as a tree.'
+    )
+    args = parser.parse_args()
     print(Docktree().build_tree(), end='')
 
 
