@@ -11,6 +11,11 @@ except ImportError:
     print("Cannot import Docker API, is docker_py installed?", file=sys.stderr)
     sys.exit(1)
 
+try:
+    from StringIO import StringIO
+except:
+    from io import StringIO
+
 # Pseudographics
 ZERO, ONE, TWO, THREE = (
     u'   ',
@@ -24,42 +29,44 @@ ZERO, ONE, TWO, THREE = (
     u'├─ '
 )
 
-images = []
 
+class Docktree(object):
 
-def name(image):
-    id, tag = image['Id'][0:12], image['RepoTags'][0]
-    if tag == '<none>:<none>':
-        return id
-    return id + ' ' + tag
+    def __init__(self):
+        cli = Client(base_url='unix://var/run/docker.sock', version='auto')
+        self.images = cli.images(all=True)
 
+    def build_tree(self):
+        def name(image):
+            id, tag = image['Id'][0:12], image['RepoTags'][0]
+            if tag == '<none>:<none>':
+                return id
+            return id + ' ' + tag
 
-def children(image_id):
-    return [i for i in images if i['ParentId'] == image_id]
+        def children(image_id):
+            return [i for i in self.images if i['ParentId'] == image_id]
 
+        def tree(root_id=''):
+            return [(name(img), tree(img['Id'])) for img in children(root_id)]
 
-def tree(root_id=''):
-    return [(name(img), tree(img['Id']))
-            for img in children(root_id)]
+        def draw_tree(tree, marks):
+            for i, (img, chldrn) in enumerate(tree):
+                for x in marks:
+                    print(ONE if x else ZERO, end='', file=f)
+                if i < len(tree) - 1:
+                    print(THREE + img, file=f)
+                    draw_tree(chldrn, marks + [1])
+                else:
+                    print(TWO + img, file=f)
+                    draw_tree(chldrn, marks + [0])
 
-
-def display(tree, marks):
-    for i, (img, chldrn) in enumerate(tree):
-        for x in marks:
-            print(ONE if x else ZERO, end='')
-        if i < len(tree) - 1:
-            print(THREE + img)
-            display(chldrn, marks + [1])
-        else:
-            print(TWO + img)
-            display(chldrn, marks + [0])
+        f = StringIO()
+        draw_tree(tree(''), [])
+        return f.getvalue()
 
 
 def main():
-    global images
-    cli = Client(base_url='unix://var/run/docker.sock', version='auto')
-    images = cli.images(all=True)
-    display(tree(''), [])
+    print(Docktree().build_tree(), end='')
 
 
 if __name__ == '__main__':
