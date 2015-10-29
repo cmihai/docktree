@@ -12,8 +12,8 @@ with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
 
 setup(
     name='docktree',
-    version='0.1.2',
-    description='Display the local Docker images as a tree',
+    version='0.2.0',
+    description='Display the local Docker image layers as a tree',
     long_description=long_description,
     url='https://github.com/cmihai/docktree',
     author='Mihai Ciumeică',
