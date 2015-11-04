@@ -12,7 +12,8 @@ Positional arguments:
     IMAGE       show only parents and children of IMAGE
 
 Optional arguments:
-    -h, --help  show this help message and exit
+    -h, --help       show this help message and exit
+    -s, --show-size  show the virtual size of each layer
 
 Usage example:
 ::
