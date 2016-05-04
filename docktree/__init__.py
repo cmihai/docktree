@@ -5,12 +5,16 @@ from __future__ import print_function
 import sys
 import locale
 import argparse
+import codecs
 
 try:
     from docker import Client
 except ImportError:
     print("Cannot import Docker API, is docker_py installed?", file=sys.stderr)
     sys.exit(1)
+
+if sys.version_info < (3,):
+    sys.stdout = codecs.getwriter('utf8')(sys.stdout)
 
 
 # Pseudographics
@@ -88,7 +92,7 @@ class Docktree(object):
         def draw_branch(branch, marks=[]):
             for i, (img, chldrn) in enumerate(branch):
                 for x in marks:
-                    print(ONE if x else ZERO, end='', file=self.file)
+                    print(ONE if x else ZERO, end=u'', file=self.file)
                 if i < len(branch) - 1:
                     print(THREE + img.name, file=self.file)
                     draw_branch(chldrn, marks + [1])
