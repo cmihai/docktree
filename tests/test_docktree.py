@@ -27,7 +27,7 @@ def test_single_image():
     sh.docker(sh.cat('empty.tar'), 'import', '-', 'footest')
     f = StringIO()
     Docktree(restrict='footest', file=f).draw_tree()
-    assert re.match(u'└─ [a-f0-9]{12} footest:latest\n', f.getvalue())
+    assert re.match(u'└─ sha256:[a-f0-9]{5} footest:latest\n', f.getvalue())
 
 
 def test_two_images():
@@ -36,5 +36,5 @@ def test_two_images():
     f = StringIO()
     Docktree(restrict='footest', file=f).draw_tree()
     assert re.match(
-        u'└─ [a-f0-9]{12} footest:latest\n' +
-        u'   └─ [a-f0-9]{12} bartest:latest\n', f.getvalue())
+        u'└─ sha256:[a-f0-9]{5} footest:latest\n' +
+        u'   └─ sha256:[a-f0-9]{5} bartest:latest\n', f.getvalue())
